@@ -11,7 +11,7 @@ const AdminSupplierListPage = () => {
     const fetchSuppliers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/suppliers/allsuppliers', {
+        const res = await axios.get('https://be-kltn-1.onrender.com/api/suppliers/allsuppliers', {
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log(res.data);

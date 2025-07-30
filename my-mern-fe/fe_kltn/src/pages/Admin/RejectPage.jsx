@@ -15,7 +15,7 @@ const RejectPage = () => {
 
   const rejectProduct = (id) => {
     const token = localStorage.getItem('token');
-    axios.patch(`http://localhost:5000/api/products/${id}/reject`, {}, {
+    axios.patch(`https://be-kltn-1.onrender.com/api/products/${id}/reject`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(() => setProducts(products.filter(p => p._id !== id)))

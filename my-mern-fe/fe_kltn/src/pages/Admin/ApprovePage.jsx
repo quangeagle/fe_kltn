@@ -6,7 +6,7 @@ const ApprovePage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:5000/api/products/supplier/allsuppliers?status=pending', {
+    axios.get('https://be-kltn-1.onrender.com/api/products/supplier/allsuppliers?status=pending', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => setProducts(res.data))
@@ -15,7 +15,7 @@ const ApprovePage = () => {
 
   const approveProduct = (id) => {
     const token = localStorage.getItem('token');
-    axios.patch(`http://localhost:5000/api/products/${id}/approve`, {}, {
+    axios.patch(`https://be-kltn-1.onrender.com/api/products/${id}/approve`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(() => setProducts(products.filter(p => p._id !== id)))

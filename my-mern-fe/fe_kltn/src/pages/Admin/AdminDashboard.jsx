@@ -20,7 +20,7 @@ const AdminDashboard = () => {
     setAdminName(name);
 
     // Fetch dashboard stats
-    axios.get('http://localhost:5000/api/admins/dashboard', {
+    axios.get('https://be-kltn-1.onrender.com/api/admins/dashboard', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => {

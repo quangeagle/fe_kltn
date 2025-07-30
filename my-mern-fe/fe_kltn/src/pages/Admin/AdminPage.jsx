@@ -6,7 +6,7 @@ const AdminPage = () => {
   const name = localStorage.getItem('name');
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:5000/api/admins/dashboard', {
+    axios.get('https://be-kltn-1.onrender.com/api/admins/dashboard', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => setMsg(`Welcome Admin: ${name}`))

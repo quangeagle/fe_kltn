@@ -7,7 +7,7 @@ function SupplierProductsPage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/products/supplier/${supplierId}`).then(res => setProducts(res.data.data));
+    axios.get(`https://be-kltn-1.onrender.com/api/products/supplier/${supplierId}`).then(res => setProducts(res.data.data));
   }, [supplierId]);
 
   return (
