@@ -9,9 +9,11 @@ function CreateProductForm() {
   const [category, setCategory] = useState('');
   const [images, setImages] = useState([]);
   const [categories, setCategories] = useState([]);
-
+  const [quantity, setQuantity] = useState('');
   const token = localStorage.getItem('token');
-
+  const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dqlpqcux3/upload';
+  const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
+  
   // Lấy danh sách category để đổ vào dropdown
   useEffect(() => {
     axios.get('http://localhost:5000/api/categories')
@@ -33,21 +35,37 @@ function CreateProductForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const imageUrls = images.map(file => URL.createObjectURL(file)); // 🧪 tạm mock URL
-
-      const res = await axios.post('http://localhost:5000/api/products', {
+      const uploadedImageUrls = [];
+  
+      // Upload từng ảnh lên Cloudinary
+      for (let i = 0; i < images.length; i++) {
+        const formData = new FormData();
+        formData.append('file', images[i]);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  
+        const res = await axios.post(CLOUDINARY_URL, formData);
+        uploadedImageUrls.push(res.data.secure_url);
+      }
+  
+      // Gửi dữ liệu sản phẩm lên server
+      const productData = {
         name,
         description,
         price,
         unit,
+        quantity,
         category,
-        images: imageUrls,
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
+        images: uploadedImageUrls,
+      };
+  
+      const res = await axios.post('http://localhost:5000/api/products', productData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-
+  
       alert('✅ Tạo sản phẩm thành công!');
       console.log('Kết quả:', res.data);
     } catch (error) {
@@ -55,7 +73,7 @@ function CreateProductForm() {
       alert('Tạo sản phẩm thất bại');
     }
   };
-
+  
   return (
     <div className="max-w-xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-6">
       <h2 className="text-xl font-bold mb-4">Tạo sản phẩm mới</h2>
@@ -77,7 +95,14 @@ function CreateProductForm() {
           className="w-full border p-3 rounded"
           required
         />
-
+        <input
+          type="number"
+          placeholder="Số lượng"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          className="w-full border p-3 rounded"
+          required
+        />
         <input
           type="number"
           placeholder="Giá"
