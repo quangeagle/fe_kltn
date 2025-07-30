@@ -6,7 +6,7 @@ const ProductListPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:5000/api/products/supplier/allsuppliers?status=pending', {
+    axios.get('https://be-kltn-1.onrender.com/api/products/supplier/allsuppliers?status=pending', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => setProducts(res.data))

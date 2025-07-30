@@ -18,7 +18,7 @@ const AdminSupplierProductsPage = () => {
         }
         console.log('🔑 Token đang dùng:', token);
         const res = await axios.get(
-          `http://localhost:5000/api/products/supplier/${supplierId}?status=${status}`,
+          `https://be-kltn-1.onrender.com/api/products/supplier/${supplierId}?status=${status}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setProducts(res.data.products || []);
@@ -35,7 +35,7 @@ const AdminSupplierProductsPage = () => {
     const token = localStorage.getItem('token');
     try {
       await axios.patch(
-        `http://localhost:5000/api/products/${productId}/approve`,
+        `https://be-kltn-1.onrender.com/api/products/${productId}/approve`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +54,7 @@ const AdminSupplierProductsPage = () => {
     const token = localStorage.getItem('token');
     try {
       await axios.patch(
-        `http://localhost:5000/api/products/${productId}/reject`,
+        `https://be-kltn-1.onrender.com/api/products/${productId}/reject`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

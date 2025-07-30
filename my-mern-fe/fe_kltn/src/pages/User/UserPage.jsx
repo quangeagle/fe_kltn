@@ -8,7 +8,7 @@ const UserPage = () => {
     const token = localStorage.getItem('token');
     const name = localStorage.getItem('name');
     
-    axios.get('http://localhost:5000/api/users/profile', {
+    axios.get('https://be-kltn-1.onrender.com/api/users/profile', {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(res => setMsg(`Welcome User: ${name}`))

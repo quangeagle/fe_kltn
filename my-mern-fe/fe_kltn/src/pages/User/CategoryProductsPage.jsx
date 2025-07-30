@@ -7,7 +7,7 @@ function CategoryProductsPage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/products/category/${categoryId}`).then(res => setProducts(res.data.data));
+    axios.get(`https://be-kltn-1.onrender.com/api/products/category/${categoryId}`).then(res => setProducts(res.data.data));
   }, [categoryId]);
 
   return (

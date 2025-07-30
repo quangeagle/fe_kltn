@@ -13,17 +13,17 @@ function AuthPage() {
     console.log("Input:", { emailOrUsername, password });
   
     try {
-      const loginUser = axios.post('http://localhost:5000/api/users/login', {
+      const loginUser = axios.post('https://be-kltn-1.onrender.com/api/users/login', {
         email: emailOrUsername,
         password,
       });
   
-      const loginSupplier = axios.post('http://localhost:5000/api/suppliers/login', {
+      const loginSupplier = axios.post('https://be-kltn-1.onrender.com/api/suppliers/login', {
         email: emailOrUsername,
         password,
       });
   
-      const loginAdmin = axios.post('http://localhost:5000/api/admins/login', {
+      const loginAdmin = axios.post('https://be-kltn-1.onrender.com/api/admins/login', {
         username: emailOrUsername,
         password,
       });

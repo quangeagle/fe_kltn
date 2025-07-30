@@ -13,9 +13,9 @@ function HomePage() {
     const fetchData = async () => {
       try {
         const [productRes, supplierRes, categoryRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/products/all'),
-          axios.get('http://localhost:5000/api/suppliers/allsuppliers'),
-          axios.get('http://localhost:5000/api/categories')
+          axios.get('https://be-kltn-1.onrender.com/api/products/all'),
+          axios.get('https://be-kltn-1.onrender.com/api/suppliers/allsuppliers'),
+          axios.get('https://be-kltn-1.onrender.com/api/categories')
         ]);
         setProducts(productRes.data.products);
         setSuppliers(supplierRes.data.suppliers);

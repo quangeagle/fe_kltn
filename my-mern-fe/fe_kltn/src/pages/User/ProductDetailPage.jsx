@@ -7,7 +7,7 @@ function ProductDetailPage() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/products/${id}`).then(res => setProduct(res.data.data));
+    axios.get(`https://be-kltn-1.onrender.com/api/products/${id}`).then(res => setProduct(res.data.data));
   }, [id]);
 
   if (!product) return <div>Đang tải...</div>;
