@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import eagleImage from 'E:/FE_KLTN/my-mern-fe/fe_kltn/src/assets/eagle.webp';
+import eagleImage from "../../assets/eagle.webp";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
