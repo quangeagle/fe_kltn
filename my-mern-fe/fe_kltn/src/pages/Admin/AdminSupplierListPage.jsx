@@ -39,7 +39,7 @@ const AdminSupplierListPage = () => {
             <li
               key={supplier._id}
               className="border p-4 rounded shadow cursor-pointer hover:bg-gray-100"
-              onClick={() => navigate(`/admin/suppliers/${supplier._id}`)}
+              onClick={() => navigate(`/admin/supplier-products/${supplier._id}`)}
             >
               <p><strong>{supplier.storeName}</strong> — {supplier.ownerName}</p>
               <p>📍 {supplier.storeAddress}</p>

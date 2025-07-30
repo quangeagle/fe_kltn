@@ -12,7 +12,13 @@ import NavbarAdmin from './components/NavbarAdmin';
 import AdminSupplierListPage from './pages/Admin/AdminSupplierListPage';
 import AdminSupplierDetailPage from './pages/Admin/AdminSupplierProductListPage';
 import CreateProductForm from './pages/SUpplier/CreateProductForm';
-
+import HomePage from './pages/User/HomePage';
+import SupplierProductsPage from './pages/User/SupplierProductsPage';
+import CategoryProductsPage from './pages/User/CategoryProductsPage';
+import ProductDetailPage from './pages/User/ProductDetailPage';
+import AdminSupplierProductsPage from './pages/Admin/AdminSupplierProductListPage';
+import CartPage from './pages/User/CartPage';
+import RegisterSupplier from './pages/SUpplier/RegisterSupplier';
 function App() {
   return (
     <Router>
@@ -29,6 +35,13 @@ function App() {
         <Route path="/admin/suppliers" element={<AdminSupplierListPage />} />
         <Route path="/admin/supplier-products" element={<AdminSupplierDetailPage />} />
         <Route path="/supplier/create-product" element={<CreateProductForm />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/admin/supplier-products2/:supplierId" element={<SupplierProductsPage />} />
+        <Route path="/category/:categoryId" element={<CategoryProductsPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/admin/supplier-products/:supplierId" element={<AdminSupplierProductsPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/supplier/register" element={<RegisterSupplier />} />
       </Routes> 
     </Router>
   );

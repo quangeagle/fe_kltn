@@ -13,66 +13,40 @@ function AuthPage() {
     console.log("Input:", { emailOrUsername, password });
   
     try {
-      // Gọi 3 API login
       const loginUser = axios.post('http://localhost:5000/api/users/login', {
         email: emailOrUsername,
-        password
-      }).then(res => {
-        console.log("✅ Login user thành công:", res.data);
-        return res;
-      }).catch(err => {
-        console.warn("❌ Login user thất bại:", err.response?.data || err.message);
-        throw err;
+        password,
       });
   
       const loginSupplier = axios.post('http://localhost:5000/api/suppliers/login', {
         email: emailOrUsername,
-        password
-      }).then(res => {
-        console.log("✅ Login supplier thành công:", res.data);
-        return res;
-      }).catch(err => {
-        console.warn("❌ Login supplier thất bại:", err.response?.data || err.message);
-        throw err;
+        password,
       });
   
       const loginAdmin = axios.post('http://localhost:5000/api/admins/login', {
         username: emailOrUsername,
-        password
-      }).then(res => {
-        console.log("✅ Login admin thành công:", res.data);
-        return res;
-      }).catch(err => {
-        console.warn("❌ Login admin thất bại:", err.response?.data || err.message);
-        throw err;
+        password,
       });
   
       const result = await Promise.any([loginUser, loginSupplier, loginAdmin]);
-  
       console.log("🎯 Đăng nhập thành công. Dữ liệu trả về:", result.data);
   
-      const { token, role } = result.data;
+      const { token, role, name } = result.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("name", name);
   
-      localStorage.setItem('token', token);
-      localStorage.setItem('name', result.data.name);
-
-      if (role === 'user') {
-        console.log("👉 Điều hướng tới trang user");
-        navigate('/user');
-      } else if (role === 'supplier') {
-        console.log("👉 Điều hướng tới trang supplier");
-        navigate('/supplier');
-      } else if (role === 'admin') {
-        console.log("👉 Điều hướng tới trang admin");
-        navigate('/admin');
+      if (role === "user") {
+        navigate("/home");
+      } else if (role === "supplier") {
+        navigate("/supplier");
+      } else if (role === "admin") {
+        navigate("/admin");
       } else {
-        console.error("❌ Không xác định được loại tài khoản!");
-        alert('Đăng nhập thất bại!');
+        alert("Không xác định được loại tài khoản!");
       }
-  
     } catch (err) {
-      console.error("🚨 Đăng nhập thất bại toàn bộ:", err.response?.data || err.message);
-      alert(err.response?.data?.error || 'Lỗi đăng nhập');
+      console.error("🚨 Đăng nhập thất bại toàn bộ:", err);
+      alert("Đăng nhập thất bại! Sai thông tin hoặc lỗi server.");
     }
   };
   
