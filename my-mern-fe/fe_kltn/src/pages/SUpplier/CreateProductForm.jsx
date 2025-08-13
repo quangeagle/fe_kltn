@@ -16,7 +16,7 @@ function CreateProductForm() {
   
   // Lấy danh sách category để đổ vào dropdown
   useEffect(() => {
-    axios.get('http://localhost:5000/api/categories')
+    axios.get('https://be-kltn-1.onrender.com/api/categories')
       .then(res => {
         const categoryList = res.data?.data || [];
         setCategories(categoryList);
@@ -60,7 +60,7 @@ function CreateProductForm() {
         images: uploadedImageUrls,
       };
   
-      const res = await axios.post('http://localhost:5000/api/products', productData, {
+      const res = await axios.post('https://be-kltn-1.onrender.com/api/products', productData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

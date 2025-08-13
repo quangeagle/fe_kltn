@@ -19,6 +19,12 @@ import ProductDetailPage from './pages/User/ProductDetailPage';
 import AdminSupplierProductsPage from './pages/Admin/AdminSupplierProductListPage';
 import CartPage from './pages/User/CartPage';
 import RegisterSupplier from './pages/SUpplier/RegisterSupplier';
+import OrderPage from './pages/User/order';
+import SupplierOrderList from './pages/SUpplier/SupplierOrderList';
+import ProductsPage from './pages/User/ProductsPage';
+import SuppliersPage from './pages/User/SuppliersPage';
+import SupplierDetailPage from './pages/User/SupplierDetailPage';
+import SupplierDashboard from './pages/SUpplier/SupplierDashboard';
 function App() {
   return (
     <Router>
@@ -42,6 +48,12 @@ function App() {
         <Route path="/admin/supplier-products/:supplierId" element={<AdminSupplierProductsPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/supplier/register" element={<RegisterSupplier />} />
+        <Route path="/order" element={<OrderPage />} />
+        <Route path="/supplier/orders" element={<SupplierOrderList />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/suppliers" element={<SuppliersPage />} />
+        <Route path="/supplier/:supplierId" element={<SupplierDetailPage />} />
+        <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
       </Routes> 
     </Router>
   );
