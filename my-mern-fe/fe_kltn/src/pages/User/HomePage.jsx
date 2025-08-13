@@ -38,7 +38,7 @@ function HomePage() {
     try {
       const token = localStorage.getItem('token'); // hoặc dùng context nếu có
       const res = await axios.post(
-        'http://localhost:5000/api/cart/add',
+        'https://be-kltn-1.onrender.com/api/cart/add',
         { productId, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -92,23 +92,14 @@ function HomePage() {
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
             <h1 className="text-5xl font-bold mb-6 leading-tight">
-              Tailwind Template for<br />
-              NFT Marketplace and<br />
-              Web3 Platforms
+              Eagle<br />
+              Bay cao cùng Eagle – Mọi thứ bạn cần, chỉ cách một cú chạm<br />
+         
             </h1>
             <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-              Template for NFT, Token, and Web3 marketplace projects, based on Tailwind CSS. 
-              Comes with all the essential UI components and pages you need to build an NFT marketplace 
-              or all sorts of Web3 platforms.
+            Eagle là nền tảng thương mại điện tử hiện đại, được thiết kế tối ưu cho người dùng Việt. Chúng tôi mang đến một không gian mua sắm trực tuyến đơn giản – nhanh chóng – tiện lợi, giúp bạn dễ dàng tìm kiếm và sở hữu những sản phẩm chất lượng chỉ trong vài cú nhấp chuột.
             </p>
-            <div className="flex space-x-4">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all">
-                Explore now
-              </button>
-              <button className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-all">
-                Upload Your Art
-              </button>
-            </div>
+          
           </div>
                      <div className="relative">
              <div className="w-96 h-96 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-2xl relative overflow-hidden">
@@ -133,18 +124,18 @@ function HomePage() {
       <section className="px-6 py-12">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white">Top Artists</h2>
+            <h2 className="text-3xl font-bold text-white">Cửa Hàng Nổi Bật</h2>
             <div className="flex space-x-2">
-              <button className="w-8 h-8 bg-gray-700 text-white rounded flex items-center justify-center hover:bg-gray-600">
+              <Link to="/suppliers" className="w-8 h-8 bg-gray-700 text-white rounded flex items-center justify-center hover:bg-gray-600">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-              </button>
-              <button className="w-8 h-8 bg-gray-700 text-white rounded flex items-center justify-center hover:bg-gray-600">
+              </Link>
+              <Link to="/suppliers" className="w-8 h-8 bg-gray-700 text-white rounded flex items-center justify-center hover:bg-gray-600">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -154,7 +145,7 @@ function HomePage() {
                   <img src={supplier.avatar} alt={supplier.storeName} className="w-full h-full object-cover rounded-full" />
                 </div>
                 <h3 className="text-white font-semibold mb-2">{supplier.storeName?.replace(/\s+/g, '_') || 'Store'}</h3>
-                <p className="text-gray-400">{(Math.random() * 20 + 1).toFixed(2)} ETH</p>
+               
               </div>
             ))}
           </div>
@@ -165,7 +156,7 @@ function HomePage() {
       <section className="px-6 py-12 border-t border-gray-700">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white">QuangEagle</h2>
+            <h2 className="text-3xl font-bold text-white">Ngành Hàng</h2>
             <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
               View All
             </button>
@@ -196,10 +187,10 @@ function HomePage() {
       <section className="px-6 py-12 border-t border-gray-700">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white">Today's Picks</h2>
-            <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all">
-              View All
-            </button>
+            <h2 className="text-3xl font-bold text-white">Sản Phẩm Nổi Bật</h2>
+            <Link to="/products" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all">
+              Xem Tất Cả
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.isArray(products) && products.slice(0, 8).map((product, index) => (
@@ -215,7 +206,9 @@ function HomePage() {
                     <span>{(Math.random() * 5 + 0.5).toFixed(1)}K</span>
                   </div>
                 </div>
-                <h3 className="text-white font-semibold mb-2">{product.name}</h3>
+                <Link to={`/product/${product._id}`} className="text-white font-semibold mb-2 hover:underline">
+                {product.name}
+              </Link>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
                     <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>

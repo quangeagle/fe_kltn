@@ -7,6 +7,10 @@ function SupplierPage() {
     navigate('/supplier/create-product');
   };
 
+  const goToOrderList = () => {
+    navigate('/supplier/orders');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-xl text-center">
@@ -17,6 +21,12 @@ function SupplierPage() {
           className="bg-orange-500 text-white px-6 py-3 rounded hover:bg-orange-600 transition"
         >
           ➕ Tạo sản phẩm mới
+        </button>
+        <button
+          onClick={goToOrderList}
+          className="bg-orange-500 text-white px-6 py-3 rounded hover:bg-orange-600 transition"
+        >
+          🛒 Xem đơn hàng
         </button>
       </div>
     </div>
