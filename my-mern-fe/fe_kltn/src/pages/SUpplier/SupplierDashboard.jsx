@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SalesChart from '../../components/SalesChart';
-import ActiveUsersChart from '../../components/ActiveUsersChart';
-import DottedGlobe from '../../components/DottedGlobe';
-import RevenuePrediction from '../../components/RevenuePrediction';
+
 
 const SupplierDashboard = () => {
+  const navigate = useNavigate();
   const [supplierName, setSupplierName] = useState('');
   const [stats, setStats] = useState({
     totalProducts: 0,
@@ -16,6 +15,42 @@ const SupplierDashboard = () => {
   });
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Mock data for demo when API doesn't return data
+  const mockRecentOrders = [
+    {
+      _id: 'mock-order-1',
+      orderId: 'ORD-001',
+      customerName: 'Nguyễn Văn An',
+      items: [{ product: { name: 'Laptop Gaming ASUS ROG' } }],
+      status: 'Đã giao',
+      totalAmount: 25000000
+    },
+    {
+      _id: 'mock-order-2',
+      orderId: 'ORD-002',
+      customerName: 'Trần Thị Bình',
+      items: [{ product: { name: 'Điện thoại iPhone 15 Pro' } }],
+      status: 'Đang vận chuyển',
+      totalAmount: 32000000
+    },
+    {
+      _id: 'mock-order-3',
+      orderId: 'ORD-003',
+      customerName: 'Lê Văn Cường',
+      items: [{ product: { name: 'Tai nghe Sony WH-1000XM5' } }],
+      status: 'Đang xử lý',
+      totalAmount: 8500000
+    },
+    {
+      _id: 'mock-order-4',
+      orderId: 'ORD-004',
+      customerName: 'Phạm Thị Dung',
+      items: [{ product: { name: 'Đồng hồ thông minh Apple Watch' } }],
+      status: 'Chờ xác nhận',
+      totalAmount: 12000000
+    }
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -37,14 +72,31 @@ const SupplierDashboard = () => {
     .then(res => {
       // Check if response has orders array or is direct array
       const ordersData = res.data.orders || res.data;
-      setRecentOrders(ordersData.slice(0, 4)); // Get latest 4 orders
+      if (ordersData && ordersData.length > 0) {
+        setRecentOrders(ordersData.slice(0, 4)); // Get latest 4 orders
+      } else {
+        console.log('API returned no orders, using mock data for demo');
+        setRecentOrders(mockRecentOrders);
+      }
       setLoading(false);
     })
     .catch(err => {
       console.log('Error fetching recent orders:', err);
+      console.log('Using mock orders data due to API error');
+      setRecentOrders(mockRecentOrders);
       setLoading(false);
     });
   }, []);
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('name');
+      navigate('/');
+    } catch (e) {
+      navigate('/');
+    }
+  };
 
   const StatCard = ({ title, value, change, changeType, icon, bgColor }) => (
     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
@@ -195,25 +247,43 @@ const SupplierDashboard = () => {
                   Thông tin cá nhân
                 </Link>
                 <Link 
-                  to="/supplier/analytics" 
+                  to="/supplier/revenue-analytics" 
                   className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <span className="mr-3">📊</span>
-                  Báo cáo thống kê
+                   Dự đoán doanh thu
+                </Link>
+                <Link 
+                  to="/supplier/test" 
+                  className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <span className="mr-3">🔍</span>
+                  Test mô hình
+                </Link>
+                <Link 
+                  to="/supplier/model-test" 
+                  className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <span className="mr-3">🔍</span>
+                  Lịch sử dự đoán
                 </Link>
               </div>
             </div>
           </nav>
+          <button 
+            onClick={handleLogout}
+            className="w-full mt-4 flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
+          >
+            <span className="mr-2">🚪</span>
+            Đăng xuất
+          </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 relative overflow-hidden">
-        {/* Globe Background */}
-        <DottedGlobe />
-
+      <div className="flex-1">
         {/* Content */}
-        <div className="relative z-10 h-full overflow-auto">
+        <div className="h-full overflow-auto">
           {/* Header */}
           <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
             <div className="flex items-center justify-between">
@@ -252,7 +322,7 @@ const SupplierDashboard = () => {
           </div>
 
           {/* Dashboard Content */}
-          <div className="p-6 max-w-4xl">
+          <div className="p-6">
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <StatCard
@@ -273,7 +343,7 @@ const SupplierDashboard = () => {
               />
               <StatCard
                 title="Doanh thu tháng"
-                value={`$${stats.totalRevenue.toLocaleString()}`}
+                value={`₫${stats.totalRevenue.toLocaleString()}`}
                 change="+15%"
                 changeType="positive"
                 icon="💰"
@@ -295,15 +365,6 @@ const SupplierDashboard = () => {
               <SalesChart />
             </div>
 
-            {/* Revenue Prediction */}
-            <div className="mt-6">
-              <RevenuePrediction />
-            </div>
-
-            {/* Active Users Card */}
-            <div className="mt-6">
-              <ActiveUsersChart />
-            </div>
 
             {/* Footer */}
             <div className="mt-8 text-center text-gray-500 text-sm">

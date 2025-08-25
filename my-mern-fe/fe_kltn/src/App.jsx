@@ -25,6 +25,9 @@ import ProductsPage from './pages/User/ProductsPage';
 import SuppliersPage from './pages/User/SuppliersPage';
 import SupplierDetailPage from './pages/User/SupplierDetailPage';
 import SupplierDashboard from './pages/SUpplier/SupplierDashboard';
+import RevenueAnalyticsPage from './pages/SUpplier/RevenueAnalyticsPage';
+import PredictionDemo from './pages/SUpplier/Test';
+import ModelTestDashboard from './pages/SUpplier/ModelTestDashboard';
 function App() {
   return (
     <Router>
@@ -54,6 +57,9 @@ function App() {
         <Route path="/suppliers" element={<SuppliersPage />} />
         <Route path="/supplier/:supplierId" element={<SupplierDetailPage />} />
         <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
+        <Route path="/supplier/revenue-analytics" element={<RevenueAnalyticsPage />} />
+        <Route path="/supplier/test" element={<PredictionDemo />} />
+        <Route path="/supplier/model-test" element={<ModelTestDashboard />} />
       </Routes> 
     </Router>
   );
