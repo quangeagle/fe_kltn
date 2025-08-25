@@ -1,5 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+// Đăng ký các component cần thiết cho Chart.js
+ChartJS.register(
+  CategoryScale, 
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const SalesChart = () => {
   const [revenueData, setRevenueData] = useState([]);
@@ -23,10 +47,18 @@ const SalesChart = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         
-        setRevenueData(response.data);
+        // If API returns data, use it; otherwise use mock data
+        if (response.data && response.data.length > 0) {
+          setRevenueData(response.data);
+        } else {
+          console.log('API returned no data, using mock data for demo');
+          setRevenueData([]);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching revenue data:', error);
+        console.log('Using mock data due to API error');
+        setRevenueData([]);
         setLoading(false);
       }
     };
@@ -34,36 +66,99 @@ const SalesChart = () => {
     fetchRevenueData();
   }, []);
 
-  // Calculate chart data
-  const maxRevenue = Math.max(...revenueData.map(item => item.actualWeeklySales || 0), 1);
-  const chartData = revenueData.map((item, index) => ({
-    week: `Week ${item.weekOfYear}`,
-    revenue: item.actualWeeklySales || 0,
-    percentage: ((item.actualWeeklySales || 0) / maxRevenue) * 100,
-    date: new Date(item.weekStart).toLocaleDateString('vi-VN', { month: 'short', day: 'numeric' })
-  }));
-
-  // For single data point, create a more visible line
-  const generatePath = (data) => {
-    if (data.length === 0) return '';
-    
-    if (data.length === 1) {
-      // Create a diagonal line for single data point to make it more visible
-      const y = 100 - data[0].percentage;
-      return `M 10 ${y} L 90 ${y}`;
-    }
-    
-    const points = data.map((item, index) => {
-      const x = 10 + (index / (data.length - 1)) * 80; // Add padding
-      const y = 100 - item.percentage;
-      return `${x} ${y}`;
-    });
-    
-    return `M ${points.join(' L ')}`;
+  // Chuẩn bị dữ liệu cho Chart.js
+  const chartData = {
+    labels: revenueData.map(item => `Tuần ${item.weekOfYear}`),
+    datasets: [
+      {
+        label: 'Doanh thu tuần (₫)',
+        data: revenueData.map(item => item.actualWeeklySales),
+        borderColor: 'rgb(236, 72, 153)',
+        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: 'rgb(236, 72, 153)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+      }
+    ]
   };
 
-
-
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+            weight: 'bold'
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: 'rgb(236, 72, 153)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: false,
+        callbacks: {
+          label: function(context) {
+            return `Doanh thu: ₫${context.parsed.y.toLocaleString()}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+          drawBorder: false
+        },
+        ticks: {
+          callback: function(value) {
+            return `₫${(value / 1000000).toFixed(1)}M`;
+          },
+          font: {
+            size: 11
+          },
+          padding: 10
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            size: 11
+          },
+          padding: 10
+        }
+      }
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index'
+    },
+    elements: {
+      point: {
+        hoverBackgroundColor: 'rgb(236, 72, 153)',
+        hoverBorderColor: '#fff',
+        hoverBorderWidth: 3
+      }
+    }
+  };
   if (loading) {
     return (
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
@@ -87,93 +182,23 @@ const SalesChart = () => {
       </p>
       
       {/* Chart Container */}
-      <div className="relative h-48">
-        {/* Y-axis labels */}
-        <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500">
-          <span>₫{(maxRevenue * 0.8).toLocaleString()}</span>
-          <span>₫{(maxRevenue * 0.6).toLocaleString()}</span>
-          <span>₫{(maxRevenue * 0.4).toLocaleString()}</span>
-          <span>₫{(maxRevenue * 0.2).toLocaleString()}</span>
-          <span>₫0</span>
-        </div>
-        
-        {/* Chart Area */}
-        <div className="ml-12 h-full relative">
-          {/* Grid lines */}
-          <div className="absolute inset-0">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="absolute w-full border-t border-gray-200"
-                style={{ top: `${(i * 25)}%` }}
-              />
-            ))}
-          </div>
-          
-                     {/* Chart line */}
-           {chartData.length > 0 && (
-             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-               {/* Revenue line */}
-               <path
-                 d={generatePath(chartData)}
-                 stroke="#ec4899"
-                 strokeWidth="3"
-                 fill="none"
-                 strokeLinecap="round"
-                 strokeLinejoin="round"
-               />
-               
-                               {/* Data points */}
-                {chartData.map((item, index) => {
-                  const x = chartData.length === 1 ? 50 : 10 + (index / (chartData.length - 1)) * 80;
-                  const y = 100 - item.percentage;
-                  return (
-                    <circle
-                      key={index}
-                      cx={x}
-                      cy={y}
-                      r="4"
-                      fill="#ec4899"
-                      stroke="white"
-                      strokeWidth="2"
-                    />
-                  );
-                })}
-             </svg>
-           )}
-          
-                     {/* X-axis labels */}
-           {chartData.length > 0 && (
-             <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-gray-500 mt-2">
-               {chartData.length === 1 ? (
-                 <span className="transform -rotate-45 origin-left">
-                   {chartData[0].week}
-                 </span>
-               ) : (
-                 chartData.map((item, index) => (
-                   <span key={index} className="transform -rotate-45 origin-left">
-                     {item.week}
-                   </span>
-                 ))
-               )}
-             </div>
-           )}
-        </div>
+      <div className="h-64 mb-6">
+        <Line data={chartData} options={chartOptions} />
       </div>
       
       {/* Revenue details */}
-      {chartData.length > 0 && (
-        <div className="mt-4 grid grid-cols-2 gap-4">
+      {revenueData.length > 0 && (
+        <div className="grid grid-cols-2 gap-4">
           <div className="text-center">
             <p className="text-sm text-gray-600">Tuần cao nhất</p>
             <p className="text-lg font-semibold text-green-600">
-              ₫{Math.max(...chartData.map(item => item.revenue)).toLocaleString()}
+              ₫{Math.max(...revenueData.map(item => item.actualWeeklySales)).toLocaleString()}
             </p>
           </div>
           <div className="text-center">
             <p className="text-sm text-gray-600">Tuần thấp nhất</p>
             <p className="text-lg font-semibold text-red-600">
-              ₫{Math.min(...chartData.map(item => item.revenue)).toLocaleString()}
+              ₫{Math.min(...revenueData.map(item => item.actualWeeklySales)).toLocaleString()}
             </p>
           </div>
         </div>
